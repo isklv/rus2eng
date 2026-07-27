@@ -1,2 +1,4 @@
-[target.aarch64-linux-android]
+[target.aarch64-unknown-linux-musl]
 linker = "/opt/data/home/.ndk/android-ndk-r28/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android35-clang"
+rustflags = ["-C", "link-self-contained=yes"]
+
