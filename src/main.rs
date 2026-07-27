@@ -113,9 +113,9 @@ fn main() {
             "rus2eng — detect keyboard layout and translate between RU ↔ EN\n\
              \n\
              Usage:\n\
-             rus2eng <text>          translate a single string\n\
+             rus2eng <text>          translate a single string (join multiple args with spaces)\n\
              rus2eng -               read lines from stdin (Ctrl+D to finish)\n\
-             rus2eng file.txt        translate every line of a file"
+             rus2eng file.txt        translate every line of an existing file"
         );
         return;
     }
@@ -125,11 +125,15 @@ fn main() {
             let mut buf = String::new();
             io::stdin().read_to_string(&mut buf).expect("cannot read stdin");
             buf
-        } else {
+        } else if std::path::Path::new(&args[1]).is_file() {
+            // Looks like an existing file — read and translate its contents.
             std::fs::read_to_string(&args[1]).unwrap_or_else(|e| {
                 eprintln!("error: {}", e);
                 std::process::exit(1);
             })
+        } else {
+            // Not an existing file — treat all remaining args as the text itself.
+            args[1..].join(" ")
         }
     } else {
         let mut buf = String::new();
